@@ -9,8 +9,8 @@ COMMAND=$1
 LOCAL=${LOCAL:-/storage}
 REMOTE="$AWS_BUCKET"
 
-if [[ -n "$ENDPOINT_URL" ]]; then
-  AWS="aws --endpoint-url $ENDPOINT_URL"
+if [[ -n "$AWS_ENDPOINT_URL" ]]; then
+  AWS="aws --endpoint-url $AWS_ENDPOINT_URL"
 else
   AWS=aws
 fi
