@@ -15,6 +15,8 @@ else
   AWS=aws
 fi
 
+$AWS s3 ls "$REMOTE" --page-size 1 > /dev/null
+
 function restore {
   echo "Restore $REMOTE => $LOCAL"
   $AWS s3 sync "$REMOTE" "$LOCAL"
