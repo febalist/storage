@@ -48,6 +48,7 @@ function backup_final {
 function backup_loop {
   echo "Backup loop"
   trap backup_final SIGHUP SIGINT SIGTERM
+  backup
   while true; do
     sleep ${BACKUP_INTERVAL:-300} &
     wait $!
