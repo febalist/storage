@@ -36,18 +36,8 @@ function backup {
   $AWS s3 sync "$LOCAL" "$REMOTE" --delete
 }
 
-function backup_final {
-  echo "Backup final"
-  while ! backup; do
-    echo "Backup failed, retry" 1>&2
-    sleep 1
-  done
-  exit 0
-}
-
 function backup_loop {
   echo "Backup loop"
-  trap backup_final SIGHUP SIGINT SIGTERM
   backup
   while true; do
     sleep ${BACKUP_INTERVAL:-300} &
