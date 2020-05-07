@@ -1,0 +1,22 @@
+name: Docker
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Build
+        uses: docker/build-push-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}/${{ github.event.repository.name }}
+          cache_froms: ${{ github.repository }}/${{ github.event.repository.name }}
+          always_pull: true
