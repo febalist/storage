@@ -8,8 +8,6 @@ fi
 COMMAND=$1
 LOCAL=${LOCAL:-/storage}
 REMOTE="$AWS_BUCKET"
-shift
-ARGS="$*"
 
 if [[ -n "$AWS_ENDPOINT_URL" ]]; then
   AWS="aws --endpoint-url $AWS_ENDPOINT_URL"
@@ -21,7 +19,7 @@ $AWS s3 ls "$REMOTE" --page-size 1 > /dev/null
 
 function restore() {
   echo "Restore $REMOTE => $LOCAL"
-  $AWS s3 sync "$REMOTE" "$LOCAL" $ARGS
+  $AWS s3 sync "$REMOTE" "$LOCAL" $RESTORE_ARGS
 }
 
 function restore_empty() {
@@ -35,7 +33,7 @@ function restore_empty() {
 
 function backup() {
   echo "Backup $LOCAL => $REMOTE"
-  $AWS s3 sync "$LOCAL" "$REMOTE" --delete $ARGS
+  $AWS s3 sync "$LOCAL" "$REMOTE" --delete $BACKUP_ARGS
 }
 
 function backup_loop() {
