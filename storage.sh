@@ -2,12 +2,14 @@
 set -e
 
 if [[ -n "$TRACE" ]]; then
-  set -x;
+  set -x
 fi
 
 COMMAND=$1
 LOCAL=${LOCAL:-/storage}
 REMOTE="$AWS_BUCKET"
+shift
+ARGS="$*"
 
 if [[ -n "$AWS_ENDPOINT_URL" ]]; then
   AWS="aws --endpoint-url $AWS_ENDPOINT_URL"
@@ -17,12 +19,12 @@ fi
 
 $AWS s3 ls "$REMOTE" --page-size 1 > /dev/null
 
-function restore {
+function restore() {
   echo "Restore $REMOTE => $LOCAL"
-  $AWS s3 sync "$REMOTE" "$LOCAL"
+  $AWS s3 sync "$REMOTE" "$LOCAL" $ARGS
 }
 
-function restore_empty {
+function restore_empty() {
   echo "Restore if empty"
   if [[ -z "$(find $LOCAL -type f)" ]]; then
     restore
@@ -31,12 +33,12 @@ function restore_empty {
   fi
 }
 
-function backup {
+function backup() {
   echo "Backup $LOCAL => $REMOTE"
-  $AWS s3 sync "$LOCAL" "$REMOTE" --delete
+  $AWS s3 sync "$LOCAL" "$REMOTE" --delete $ARGS
 }
 
-function backup_loop {
+function backup_loop() {
   echo "Backup loop"
   backup
   while true; do
